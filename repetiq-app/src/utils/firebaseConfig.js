@@ -13,9 +13,9 @@ const firebaseConfig = {
   storageBucket: "repetiq-spaces-repetition-app.firebasestorage.app",
   messagingSenderId: "996387188224",
   appId: "1:996387188224:web:2f7a2ac86c1e80061d72e5",
-  measurementId: "G-YVHLP7L45H"
+  measurementId: "G-YVHLP7L45H",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);

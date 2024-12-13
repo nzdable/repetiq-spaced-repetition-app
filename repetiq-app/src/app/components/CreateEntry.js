@@ -87,28 +87,48 @@ function CreateEntry({ addEntry }) {
   };
 
   // HANDLING SUBMIT
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Calculate the review schedule
     const newSchedule = calculateSchedule();
-    addEntry({
-      id: Date.now(),
+
+    // Create the entry object
+    const entry = {
       topic,
       description,
       activeRecallDate: `${activeRecallDate} ${activeRecallTime}`,
       testDate: `${testDate} ${testTime}`,
       reps,
       schedule: newSchedule,
-      levelOfDifficulty: levelOfDifficulty,
-    });
-    setSchedule(newSchedule);
-    setTopic("");
-    setDescription("");
-    setActiveRecallDate("");
-    setActiveRecallTime("");
-    setTestDate("");
-    setTestTime("");
-    setReps("");
-    setLevelOfDifficulty("");
+      levelOfDifficulty,
+      createdAt: new Date(), // Optional: to keep track of the submission time
+    };
+
+    try {
+      // Add to Firestore
+      const docRef = await addDoc(collection(db, "entries"), entry);
+
+      // Call addEntry prop function (if needed)
+
+      // Reset form
+      setTopic("");
+      setDescription("");
+      setActiveRecallDate("");
+      setActiveRecallTime("");
+      setTestDate("");
+      setTestTime("");
+      setReps("");
+      setLevelOfDifficulty("");
+      setSchedule(newSchedule);
+
+      alert("Entry successfully added!");
+      console.log(docRef.id);
+      setValue("");
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert("Failed to add the entry. Please try again.");
+    }
   };
 
   return (
