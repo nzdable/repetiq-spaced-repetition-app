@@ -124,7 +124,6 @@ function CreateEntry({ addEntry }) {
 
       alert("Entry successfully added!");
       console.log(docRef.id);
-      setValue("");
     } catch (error) {
       console.error("Error adding document: ", error);
       alert("Failed to add the entry. Please try again.");
