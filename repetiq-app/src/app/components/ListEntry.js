@@ -4,13 +4,15 @@ import db from "../../utils/firestore";
 import { collection, getDocs } from "@firebase/firestore";
 import "tailwindcss/tailwind.css";
 import "../../../styles/globals.css";
-import DeleteEntry from "./DeleteEntry"; // Import the DeleteEntry component
+import DeleteEntry from "./DeleteEntry";
+import EditEntry from "./EditEntry"; // Import the EditEntry component
 
 const ListEntry = () => {
   const [entries, setEntries] = useState([]);
+  const [editingEntry, setEditingEntry] = useState(null); // State to track the entry being edited
 
   useEffect(() => {
-    const fetchEntry = async () => {
+    const fetchEntries = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "entries"));
         const fetchedEntries = querySnapshot.docs.map((doc) => ({
@@ -23,8 +25,25 @@ const ListEntry = () => {
       }
     };
 
-    fetchEntry();
+    fetchEntries();
   }, []);
+
+  const handleEdit = (entry) => {
+    setEditingEntry(entry); // Set the entry to be edited
+  };
+
+  const cancelEdit = () => {
+    setEditingEntry(null); // Reset editing state to null (cancel editing)
+  };
+
+  const updateEntry = (updatedEntry) => {
+    setEntries((prevEntries) =>
+      prevEntries.map((entry) =>
+        entry.id === updatedEntry.id ? updatedEntry : entry
+      )
+    );
+    setEditingEntry(null); // After updating, close the edit form
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -34,7 +53,7 @@ const ListEntry = () => {
           entries.map((entry) => (
             <li
               key={entry.id}
-              className="border p-4 rounded border border-black border-2 bg-white"
+              className="border p-4 rounded border-black border-2 bg-white"
             >
               <h2 className="text-lg font-semibold">Topic: {entry.topic}</h2>
               <p>Description: {entry.description}</p>
@@ -46,8 +65,24 @@ const ListEntry = () => {
                     <span key={index}>{scheduleItem}</span>
                   ))}
               </p>
-              {/* Delete button */}
-              <DeleteEntry id={entry.id} setEntries={setEntries} />
+              <p className="flex space-x-4">
+                <DeleteEntry id={entry.id} setEntries={setEntries} />
+                <button
+                  onClick={() => handleEdit(entry)}
+                  className="bg-black text-white px-4 py-2 rounded hover:bg-black"
+                >
+                  Edit
+                </button>
+              </p>
+
+              {/* Conditionally render EditEntry form if we're editing this entry */}
+              {editingEntry && editingEntry.id === entry.id && (
+                <EditEntry
+                  entry={editingEntry}
+                  updateEntry={updateEntry}
+                  cancelEdit={cancelEdit}
+                />
+              )}
             </li>
           ))
         ) : (
