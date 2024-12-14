@@ -4,6 +4,7 @@ import db from "../../utils/firestore";
 import { collection, getDocs } from "@firebase/firestore";
 import "tailwindcss/tailwind.css";
 import "../../../styles/globals.css";
+import DeleteEntry from "./DeleteEntry"; // Import the DeleteEntry component
 
 const ListEntry = () => {
   const [entries, setEntries] = useState([]);
@@ -41,10 +42,12 @@ const ListEntry = () => {
               <p className="text-lg font-semibold">Review Schedule:</p>
               <p className="grid grid-rows gap-2">
                 {entry.schedule &&
-                  entry.schedule.map((item, index) => (
-                    <span key={index}>{item}</span>
+                  entry.schedule.map((scheduleItem, index) => (
+                    <span key={index}>{scheduleItem}</span>
                   ))}
               </p>
+              {/* Delete button */}
+              <DeleteEntry id={entry.id} setEntries={setEntries} />
             </li>
           ))
         ) : (
@@ -56,40 +59,3 @@ const ListEntry = () => {
 };
 
 export default ListEntry;
-
-// function ListEntry({ entries, deleteEntry, editEntry }) {
-//   return (
-//     <div>
-//       <h2>Entries List</h2>
-//       <ul>
-//         {entries.map((entry) => (
-//           <li key={entry.id}>
-//             <p>
-//               <strong>Topic:</strong> {entry.topic}
-//             </p>
-//             <p>
-//               <strong>Description:</strong> {entry.description}
-//             </p>
-//             <p>
-//               <strong>Active Recall Date:</strong> {entry.activeRecallDate}
-//             </p>
-//             <p>
-//               <strong>Test Date:</strong> {entry.testDate}
-//             </p>
-//             <p>
-//               <strong>Repetitions:</strong> {entry.reps}
-//             </p>
-//             <p>
-//               <strong>Schedule:</strong> {entry.schedule}
-//             </p>
-
-//             <button onClick={() => editEntry(entry)}>Edit</button>
-//             <button onClick={() => deleteEntry(entry.id)}>Delete</button>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// export default EntryList;

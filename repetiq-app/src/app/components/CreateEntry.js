@@ -139,7 +139,6 @@ function CreateEntry({ addEntry }) {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg space-y-6 border border-black border-2"
       >
-        {/* Active Recall Section */}
         <div className="space-y-4">
           <div>
             <label className="block text-gray-700" htmlFor="topic">
